@@ -1,0 +1,78 @@
+﻿@model PagedList.IPagedList<HR_Management.TblEmpDetail>
+@using PagedList.Mvc;
+
+@{
+    /**/
+
+    ViewBag.Title = "Documents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+<h2>Employee Documents</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateDoc", new { Eid = Session["EID"] })
+</p>
+@using (Html.BeginForm("Documents", "Home", FormMethod.Get))
+{
+    <p>
+        Search by name: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Employee ID", "Documents", new { sortOrder = ViewBag.EIdSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("File Name", "Documents", new { sortOrder = ViewBag.EIdSortParm })
+        </th>
+        
+        <th>
+            @Html.ActionLink("Created Date", "Documents", new { sortOrder = ViewBag.EIdSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Created By", "Documents", new { sortOrder = ViewBag.EIdSortParm })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) //.Where(x => x.EmpId == ViewBag.eid))
+    {
+        if (item.EmpId == Session["EID"].ToString())
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmpId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileName)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedBy)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditDoc", new { id = item.Id }) |
+                    @Html.ActionLink("Download", "GetFileFromDisk", new { filename = item.FileName }) |
+                    @Html.ActionLink("Delete", "DeleteDoc", new { id = item.Id, eid = Session["EID"] })
+                </td>
+            </tr>
+        }
+    }
+
+</table>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

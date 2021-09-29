@@ -1,0 +1,108 @@
+﻿@*@model IEnumerable<HR_Management.TblEmployee>*@
+
+@model PagedList.IPagedList<HR_Management.TblEmployee>
+@using PagedList.Mvc;
+
+@{
+    /**/
+
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+<h2>Employee Master</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+    <p>
+        Search by name: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Employee ID", "Index", new { sortOrder = ViewBag.EIdSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Employee Name", "Index", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Employee Email", "Index", new { sortOrder = ViewBag.EmailSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Designation", "Index", new { sortOrder = ViewBag.DesignationSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Created Date", "Index", new { sortOrder = ViewBag.DateSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Created By", "Index", new { sortOrder = ViewBag.BySortParm })
+        </th>
+    </tr>
+    @*<tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmpDesignation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </th>
+            <th></th>
+        </tr>*@
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmpDesignation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedBy)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Detail", "Detail", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
+                @Html.ActionLink("Documents", "Documents", new { id = item.Id })
+                
+            </td>
+        </tr>
+    }
+
+</table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
